@@ -125,21 +125,6 @@ public class TestStudentManagementRepository {
     }
 
     @Test
-    void shouldReturnAStudentRecordById() {
-        //Arrange
-        Optional<Student> idStudent = Optional.empty();
-        for(Student student : students){
-            idStudent = studentRepository.findById(student.getId());
-        }
-
-        //Act
-        studentRepository.saveAll(students);
-
-        //Assert
-        assertThat(idStudent.isPresent()).isNotNull();
-    }
-
-    @Test
     void shouldGenerateRandomStringNumber15Char(){
         String randomString = generateNumberForStudentIds(); //should create 15 char
 

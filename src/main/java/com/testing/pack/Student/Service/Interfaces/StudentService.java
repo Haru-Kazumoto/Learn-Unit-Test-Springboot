@@ -10,8 +10,8 @@ public interface StudentService {
 
     Student saveStudent(Student body);
     List<Student> getAllStudent();
-    Optional<Student> getStudentById(int id);
+    Student getStudentById(int id);
     Student updateStudentById(Student body, int id);
-    PayloadResponse deleteStudentById(int id);
+    void deleteStudentById(int id);
 
 }

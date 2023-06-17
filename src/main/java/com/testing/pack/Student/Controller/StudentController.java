@@ -8,7 +8,7 @@ import com.testing.pack.Student.Service.Interfaces.StudentService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.HttpStatusCode;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -25,8 +25,7 @@ public class StudentController {
     public ResponseEntity<?> createStudent(
             @RequestBody StudentCreateInput dto,
             BindingResult bindingResult,
-            HttpServletResponse response,
-            HttpStatusCode statusCode
+            HttpServletResponse response
             ){
 
         if(bindingResult.hasErrors()){
@@ -41,37 +40,23 @@ public class StudentController {
         Student mapEntity = modelMapper.map(dto, Student.class);
 
         return ResponseEntity
-                .status(statusCode.value())
+                .status(HttpStatus.CREATED)
                 .body(studentService.saveStudent(mapEntity));
     }
 
     @GetMapping(path = "/get-all")
-    public ResponseEntity<?> getAllStudent(
-            HttpStatusCode status
-    ){
+    public ResponseEntity<?> getAllStudent(){
         return ResponseEntity
-                .status(status.value())
+                .status(HttpStatus.OK)
                 .body(studentService.getAllStudent());
     }
 
     @GetMapping(path = "/get/{id}")
     public ResponseEntity<?> getStudentById(
-            @PathVariable("id") int id,
-            BindingResult bindingResult,
-            HttpStatusCode status,
-            HttpServletResponse response
+            @PathVariable("id") int id
     ){
-        if(bindingResult.hasErrors()){
-            response.setStatus(403);
-            ErrorResponse res = new ErrorResponse(
-                    response.getStatus(),
-                    bindingResult.getAllErrors()
-            );
-            throw new ValidationErrorException(res);
-        }
-
         return ResponseEntity
-                .status(status.value())
+                .status(HttpStatus.OK)
                 .body(studentService.getStudentById(id));
     }
 
@@ -80,8 +65,7 @@ public class StudentController {
             @PathVariable("id") int id,
             @RequestBody StudentCreateInput dto,
             BindingResult bindingResult,
-            HttpServletResponse response,
-            HttpStatusCode statusCode
+            HttpServletResponse response
     ){
         if(bindingResult.hasErrors()){
             response.setStatus(403);
@@ -95,8 +79,8 @@ public class StudentController {
         Student mapEntity = modelMapper.map(dto, Student.class);
 
         return ResponseEntity
-                .status(statusCode.value())
-                .body(studentService.saveStudent(mapEntity));
+                .status(HttpStatus.OK)
+                .body(studentService.updateStudentById(mapEntity, id));
     }
 
 }

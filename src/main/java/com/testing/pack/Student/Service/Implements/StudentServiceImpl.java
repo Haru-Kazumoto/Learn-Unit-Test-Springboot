@@ -35,12 +35,10 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Optional<Student> getStudentById(int idStudent) {
-        var isIdExists = repository.findById(idStudent);
-        if (isIdExists.isEmpty()){
-            throw new NoSuchElementException("Id isn't exists");
-        }
-        return isIdExists;
+    public Student getStudentById(int idStudent) {
+        return repository
+                .findById(idStudent)
+                .orElseThrow(() -> new NoSuchElementException(String.format("Id %s is not exists", idStudent)));
     }
 
     @Override
@@ -53,15 +51,12 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public PayloadResponse deleteStudentById(int id) {
-        Optional<Student> idStudent = repository.findById(id);
-        if(idStudent.isEmpty()) throw new NoSuchElementException(String.format("Id %s is not found.", id));
-        repository.deleteById(id);
-        return new PayloadResponse(
-                HttpStatus.OK.value(),
-                String.format("Id %s of student has deleted",id),
-                new Date(),
-                null
-        );
+    public void deleteStudentById(int id) {
+        Student res = repository
+                .findById(id)
+                .orElseThrow(
+                        () -> new NoSuchElementException(String.format("Id %s is not found.", id))
+                );
+        repository.delete(res);
     }
 }
